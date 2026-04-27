@@ -21,11 +21,11 @@ using System.Linq;
 	RemoveStageObject(this)로 자신을 제거한 뒤에도 foreach가 계속 돌아서 이미 제거된 총알이 다른 Enemy에 중복 데미지를 줄 수 있습니다. 또한 순회 중 컬렉션을 수정하므로 예외가 발생할 수 있습니다.
 	enemy.AddDamage() 호출 후 return을 추가해야 합니다.
 
-	2번 — 매 프레임 이중 foreach로 인한 성능 문제
+	2번: 매 프레임 이중 foreach로 인한 성능 문제
 	GameStage.Update()에서 모든 오브젝트를 순회하며 Update()를 호출하고, 그 안에서 PlayerBullet.Update()가 또 stageObjects 전체를 순회합니다. 총알이 K개, 오브젝트가 N개면 매 프레임 O(N×K)가 됩니다.
 	stageObjects를 타입별로 분리해(List<Enemy> enemies 등) 총알이 전체 리스트가 아닌 Enemy 리스트만 순회하도록 해야 합니다.
 
-	3번 — player 프로퍼티의 매 호출마다 선형 탐색
+	3번: player 프로퍼티의 매 호출마다 선형 탐색
 	player => stageObjects.FirstOrDefault(x => x is Player)는 호출될 때마다 리스트 전체를 순회합니다. player 프로퍼티는 EnemyBullet.Update()에서 매 프레임 호출되므로, 
 	Player 참조를 별도 필드로 캐싱하면 좋습니다.
 
